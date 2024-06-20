@@ -1,0 +1,35 @@
+* {
+    background-color: black;
+    color: white;
+}
+
+h1 {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+p {
+    font-size: 1.2rem;
+    line-break: normal;
+}
+
+button {
+    color: #8338EC;
+    font-weight: 800;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+input {
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}

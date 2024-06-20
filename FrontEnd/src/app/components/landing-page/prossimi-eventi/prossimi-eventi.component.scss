@@ -1,0 +1,64 @@
+* {
+    background-color: #EDE839;
+    color: black;
+}
+
+h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    color: black;
+}
+
+h6 {
+    font-size: 1.2rem;
+    font-weight: bolder;
+}
+
+p {
+    font-size: 1.2rem;
+    line-break: normal;
+}
+
+a {
+    color:  #8338EC;
+}
+
+a:hover {
+    text-decoration: none;
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    height: max-content;
+    border-radius: 30px;
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.button .icon {
+    margin-right: 10px;
+}
+
+.disponibili {
+    background-color: white;
+    color: #00B050;
+}
+
+.in-esaurimento {
+    background-color: white;
+    color: #C99700;
+}
+
+.esauriti {
+    background-color: white;
+    color: #FF0000;
+}
+
+.bordinoNero {
+    border-bottom: 1px solid black;
+}
