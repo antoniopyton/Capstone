@@ -1,6 +1,7 @@
 package it.nextdevs.Capstone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.nextdevs.Capstone.enums.Genere;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +19,6 @@ public class Brano {
     private String titolo;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "artista_id")
     private Utente artista;
 
@@ -26,7 +26,8 @@ public class Brano {
 
     private double durata;
 
-    private String genere;
+    @Enumerated(EnumType.STRING)
+    private Genere genere;
 
     private double valutazioneMedia;
 

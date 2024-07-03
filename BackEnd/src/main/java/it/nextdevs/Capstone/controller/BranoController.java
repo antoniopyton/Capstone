@@ -4,6 +4,7 @@ import it.nextdevs.Capstone.DTO.BranoDto;
 import it.nextdevs.Capstone.DTO.EventoDto;
 import it.nextdevs.Capstone.DTO.UtenteDataDto;
 import it.nextdevs.Capstone.exception.BadRequestException;
+import it.nextdevs.Capstone.model.Ascolto;
 import it.nextdevs.Capstone.model.Brano;
 import it.nextdevs.Capstone.model.Evento;
 import it.nextdevs.Capstone.model.Utente;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +56,12 @@ public class BranoController {
         return branoService.deleteBrano(id);
     }
 
+//    @GetMapping("/brani/nome/{nome}")
+//    public Brano getBranoByNome(@PathVariable String nome) {
+//        return branoService.getBranoByNome(nome);
+//    }
+
+
     @PatchMapping(value = "/brani/{id}/copertina", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Brano patchCopertinaBrano(@PathVariable int id, @RequestParam("file") MultipartFile avatar) throws IOException {
         return branoService.patchCopertinaBrano(id, avatar);
@@ -64,9 +73,50 @@ public class BranoController {
         return branoService.getBranoById(id);
     }
 
-    @PatchMapping(value = "/brani/{id}/brano", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping("/brani/artista/{id}")
+    public List<Brano> getBranoByIdArtista(@PathVariable int id) {
+        return branoService.getBraniByUtenteId(id);
+    }
+
+    @PatchMapping(value = "brani/{id}/brano", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Brano patchBrano(@PathVariable int id, @RequestParam("file") MultipartFile brano) throws IOException {
         return branoService.patchBrano(id, brano);
+    }
+
+    @PatchMapping("/brani/{id}/play")
+    public void incrementaAscolti(@PathVariable int id) {
+        branoService.incrementaAscolti(id);
+    }
+
+    @GetMapping("/brani/top5")
+    public List<Brano> getTop5BraniByAscolti() {
+        return branoService.getTop5BraniByAscolti();
+    }
+
+    @GetMapping("/artisti/{id}/ascolti/settimana")
+    public long getAscoltiSettimana(@PathVariable int id) {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minus(1, ChronoUnit.WEEKS);
+        return branoService.getAscoltiByArtistaBetweenDates(startDate, endDate, id);
+    }
+
+    @GetMapping("/artisti/{id}/ascolti/mese")
+    public long getAscoltiMese(@PathVariable int id) {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minus(1, ChronoUnit.MONTHS);
+        return branoService.getAscoltiByArtistaBetweenDates(startDate, endDate, id);
+    }
+
+    @GetMapping("/artisti/{id}/ascolti/giorno")
+    public long getAscoltiGiorno(@PathVariable int id) {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minus(1, ChronoUnit.DAYS);
+        return branoService.getAscoltiByArtistaBetweenDates(startDate, endDate, id);
+    }
+
+    @GetMapping("/brani/{id}/ascolti")
+    public Integer getAscoltiByBranoId(@PathVariable int id) {
+        return branoService.getAscoltiByBranoId(id);
     }
 
 

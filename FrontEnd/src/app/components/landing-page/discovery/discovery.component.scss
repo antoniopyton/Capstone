@@ -27,3 +27,33 @@ a:hover {
     font-size: 1.3rem;
     font-weight: 800;
 }
+
+.rank {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.cover-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.play-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+}
+
+.details-link {
+  margin-left: auto;
+  font-size: 1em;
+  color: white;
+  text-decoration: none;
+}
+
+.details-link:hover {
+  text-decoration: underline;
+}

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg position-sticky top-0 start-0 px-10">
+<nav class="navbar navbar-expand-lg position-sticky top-0 start-0 px-10" *ngIf="!nascondi" [ngClass]="{'navbar-scrolled': isScrolled}">
   <div class="container-fluid my-2">
     <a class="navbar-brand" [routerLink]="['/']">Logo</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -8,18 +8,21 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']">Discovery</a>
+          <a class="nav-link" href="#discovery">Discovery</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']">Artisti</a>
+          <a class="nav-link" [routerLink]="['/artisti']">Artisti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']">Eventi</a>
+          <a class="nav-link" href="#eventi">Eventi</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']">Contatti</a>
+          <a class="nav-link" href="#footer">Contatti</a>
         </li>
-        <li class="nav-item">
+        <li *ngIf="isArtist()"  class="nav-item">
+          <a class="nav-link" [routerLink]="['/dashboardArtista']">Dashboard</a>
+        </li>
+        <li *ngIf="!user" class="nav-item">
           <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Login</a>
         </li>
         <li *ngIf="user" class="nav-item dropdown">

@@ -1,5 +1,6 @@
 package it.nextdevs.Capstone.DTO;
 
+import it.nextdevs.Capstone.enums.StatoBiglietti;
 import it.nextdevs.Capstone.enums.TipoEvento;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -25,6 +26,8 @@ public class EventoDto {
     private int postiDisponibili;
 
     private TipoEvento tipoEvento;
+
+    private StatoBiglietti statoBiglietti;
 
     @NotNull(message = "Devi inserire una capienza")
     private int capienzaMax;

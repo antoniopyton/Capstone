@@ -1,3 +1,6 @@
+import { Brani } from "./brani.interface";
+import { Eventi } from "./eventi.interface";
+
 export interface Utente {
     id: number,
     nome: string,
@@ -5,8 +8,11 @@ export interface Utente {
     email: string,
     password: string,
     tipoUtente: string,
-    username: string,
     avatar?: string,
     descrizioneArtista?: string,
-    sfondoArtista?: string
+    sfondoArtista?: string,
+    tipoArtista: string,
+    nomeArtista: string,
+    brani?: Brani[],
+    eventi?: Eventi[]
 }

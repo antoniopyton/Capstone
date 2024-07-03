@@ -1,0 +1,138 @@
+
+
+.alert {
+    background-color: #f9e5b2;
+    color: #5c5c5c;
+    border-color: #f9e5b2;
+  }
+
+  .card {
+    z-index: -5;
+  }
+  
+  .alert strong {
+    font-size: 1.1em;
+    color: #000;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .immagine {
+    width: 150px;
+    height: 150px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+  }
+
+  .immagine img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  form p {
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .modal-lg-custom {
+    max-width: 40%;
+  }
+
+  .form-label-custom {
+    font-size: 1.2rem;
+  }
+
+  .form-control-custom {
+    height: calc(2em + .75rem + 2px);
+    font-size: 1.2rem;
+  }
+
+  .btn-custom {
+    font-size: 1.2rem;
+    padding: .75rem 1.2rem;
+  }
+
+  .modal-title-custom {
+    font-size: 2rem;
+  }
+
+  a {
+    color: #8338EC;
+  }
+  
+.footer-col .social-links a{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255,255,255,0.2);
+    margin:0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: black;
+    transition: all 0.5s ease;
+  }
+  .footer-col .social-links a:hover{
+    color: #24262b;
+    background-color: #ffffff4b;
+  }
+  
+  .btn-custom {
+    background-color: #8338EC;
+    color: white;
+  }
+
+  label {
+    color: rgb(189, 189, 189);
+    font-size: small;
+  }
+
+input:focus {
+  border-color: #8338EC; 
+  box-shadow: none;
+  outline: none; 
+}
+
+.cover-preview img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.stat-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.stat-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  width: 30%;
+}
+.stat-card img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 10px;
+}
+.stat-card h2 {
+  margin: 10px 0;
+  font-size: 2em;
+}
+.stat-card p {
+  margin: 0;
+  color: grey;
+}

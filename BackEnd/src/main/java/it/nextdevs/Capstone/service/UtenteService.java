@@ -6,16 +6,21 @@ import it.nextdevs.Capstone.DTO.UtenteDto;
 import it.nextdevs.Capstone.enums.TipoUtente;
 import it.nextdevs.Capstone.exception.BadRequestException;
 import it.nextdevs.Capstone.exception.NotFoundException;
+import it.nextdevs.Capstone.model.Brano;
 import it.nextdevs.Capstone.model.Evento;
 import it.nextdevs.Capstone.model.Utente;
 import it.nextdevs.Capstone.repository.UtenteRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +55,7 @@ public class UtenteService {
             utente.setPassword(passwordEncoder.encode(utenteDto.getPassword()));
 
             utenteRepository.save(utente);
-            sendMailRegistrazione(utenteDto.getEmail());
+            sendMailUtente(utenteDto.getEmail(), utenteDto.getNome());
 
             return utente.getId();
         } else {
@@ -65,13 +70,14 @@ public class UtenteService {
             artista.setCognome(utenteDto.getCognome());
             artista.setEmail(utenteDto.getEmail());
             artista.setTipoUtente(TipoUtente.ARTISTA);
+            artista.setTipoArtista(utenteDto.getTipoArtista());
             artista.setNomeArtista(utenteDto.getNomeArtista());
             artista.setSfondoArtista(utenteDto.getSfondoArtista());
             artista.setDescrizioneArtista(utenteDto.getDescrizioneArtista());
             artista.setPassword(passwordEncoder.encode(utenteDto.getPassword()));
 
             utenteRepository.save(artista);
-            sendMailRegistrazione(utenteDto.getEmail());
+            sendMailArtista(utenteDto.getEmail(), utenteDto.getNomeArtista());
 
             return artista.getId();
         } else {
@@ -79,13 +85,38 @@ public class UtenteService {
         }
     }
 
-    public Page<Utente> getAllUtenti(int page, int size , String sortBy) {
+    public Page<Utente> getAllUtenti(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return utenteRepository.findAll(pageable);
     }
 
+    public List<Utente> getAllArtisti() {
+        return utenteRepository.findAllByTipoUtente(TipoUtente.ARTISTA);
+    }
+
     public Optional<Utente> getUserById(int id) {
         return utenteRepository.findById(id);
+    }
+
+    public Utente getUtenteByNome(String nome) {
+        Optional<Utente> utenteOptional = utenteRepository.findByNome(nome);
+
+        if (utenteOptional.isPresent()) {
+            return utenteOptional.get();
+        } else {
+            throw new NotFoundException("Cliente con nome " + nome + " non esiste");
+        }
+    }
+
+    public Utente updateDescrizione(int id, UtenteDto utenteDto) {
+        Optional<Utente> utenteOptional = getUserById(id);
+        if (utenteOptional.isPresent()) {
+            Utente utente = utenteOptional.get();
+            utente.setDescrizioneArtista(utenteDto.getDescrizioneArtista());
+            return utenteRepository.save(utente);
+        } else {
+            throw new NotFoundException("User with id: " + id + " not found");
+        }
     }
 
     public Utente updateUtente(int id, UtenteDto utenteDto) {
@@ -157,7 +188,7 @@ public class UtenteService {
             utenteDataDto.setTipoUtente(utente.getTipoUtente());
             return utenteDataDto;
         } else {
-            throw new NotFoundException("Utente con id "+id+" non trovato");
+            throw new NotFoundException("Utente con id " + id + " non trovato");
         }
     }
 
@@ -176,19 +207,84 @@ public class UtenteService {
             utenteDataDto.setEmail(utente.getEmail());
             utenteDataDto.setId(utente.getId());
             utenteDataDto.setTipoUtente(utente.getTipoUtente());
+            utenteDataDto.setDescrizioneArtista(utente.getDescrizioneArtista());
+            utenteDataDto.setNomeArtista(utente.getNomeArtista());
+            utenteDataDto.setTipoArtista(utente.getTipoArtista());
+            utenteDataDto.setSfondoArtista(utente.getSfondoArtista());
+
             return utenteDataDto;
         } else {
             throw new NotFoundException("Utente con id " + id + " non trovato");
         }
     }
 
-    private void sendMailRegistrazione(String email) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Registrazione Utente");
-        message.setText("Registrazione Utente avvenuta con successo");
+    private void sendMailUtente(String email, String nome) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        javaMailSender.send(message);
+            helper.setTo(email);
+            helper.setSubject("Benvenuto su MuzikFest");
+
+            String htmlMsg = String.format("""
+                <html>
+                    <body>
+                        <p>Ciao %s,</p>
+                        <p>Siamo entusiasti di darti il benvenuto su MuzikFest!</p>
+                        <p>Grazie per esserti unito alla nostra community. Su MuzikFest, avrai accesso a una vasta gamma di artisti emergenti e potrai partecipare a festival emozionanti. Ecco cosa puoi fare sulla nostra piattaforma:</p>
+                        <ul>
+                            <li><strong>Ascolta artisti emergenti:</strong> Scopri nuovi talenti e goditi la musica di artisti emergenti provenienti da tutto il mondo.</li>
+                            <li><strong>Partecipa a festival:</strong> Unisciti ai nostri festival musicali, partecipa agli eventi live e condividi l'esperienza con altri appassionati di musica.</li>
+                            <li><strong>Connettiti con la community:</strong> Interagisci con altri utenti, lascia recensioni e supporta i tuoi artisti preferiti.</li>
+                        </ul>
+                        <p>Se hai domande o hai bisogno di assistenza, il nostro team di supporto è qui per aiutarti. Puoi contattarci via email a <a href="mailto:supporto@muzikfest.com">supporto@muzikfest.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
+                        <p>Siamo felici di averti con noi e non vediamo l'ora di condividere con te questa fantastica esperienza musicale!</p>
+                        <p>Un caloroso benvenuto,</p>
+                        <p>Il team di MuzikFest</p>
+                    </body>
+                </html>
+                """, nome);
+            helper.setText(htmlMsg, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BadRequestException("Non è stato possibile inviare la mail");
+        }
+    }
+
+    private void sendMailArtista(String email, String nomeArtista) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Benvenuto su MuzikFest");
+
+            String htmlMsg = String.format("""
+                <html>
+                    <body>
+                        <p>Ciao %s,</p>
+                        <p>Siamo entusiasti di darti il benvenuto sulla nostra piattaforma! Grazie per esserti registrato come artista.</p>
+                        <p>Ecco alcuni passaggi per iniziare:</p>
+                        <ul>
+                            <li>Completa il tuo profilo: Aggiungi una descrizione, foto, e tutti i dettagli che ritieni importanti per presentarti al meglio alla nostra community.</li>
+                            <li>Esplora la piattaforma: Scopri le varie funzionalità e opportunità offerte per promuovere il tuo lavoro artistico.</li>
+                            <li>Connettiti con altri artisti: Inizia a seguire altri artisti e partecipa alle discussioni per costruire il tuo network professionale.</li>
+                        </ul>
+                        <p>Se hai domande o hai bisogno di assistenza, il nostro team di supporto è qui per aiutarti. Puoi contattarci via email a <a href="mailto:muzikfest@supporto.com">muzikfest@supporto.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
+                        <p>Siamo felici di averti con noi e non vediamo l'ora di vedere come contribuirai alla nostra comunità artistica!</p>
+                        <p>Un caloroso benvenuto,</p>
+                        <p>Il team di MuzikFest</p>
+                    </body>
+                </html>
+                """, nomeArtista);
+            helper.setText(htmlMsg, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BadRequestException("Non è stato possibile inviare la mail");
+        }
     }
 
 }
+

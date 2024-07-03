@@ -15,15 +15,25 @@ export class RegisterArtistaComponent implements OnInit{
 
   constructor(private authSrv: AuthService, private router: Router) {}
 
-  onSubmitRegister(form:NgForm) {
+  onSubmitRegisterArtista(form:NgForm) {
+    const validArtistTypes = ['ARTISTA', 'BAND']; 
     try {
       let value = {
         password: form.value.passwordRegister,
         email: form.value.emailRegister,
         nome: form.value.nomeRegister,
-        cognome: form.value.cognomeRegister
+        cognome: form.value.cognomeRegister,
+        nomeArtista: form.value.nomeArtistaRegister,
+        tipoArtista: form.value.tipoArtistaRegister
       }
-      this.authSrv.register(value).subscribe((data) => {
+      console.log(value.tipoArtista)
+
+      if (!validArtistTypes.includes(value.tipoArtista)) {
+        console.error('Tipo Artista non valido:', value.tipoArtista);
+        return;
+      }
+
+      this.authSrv.registerArtist(value).subscribe((data) => {
         window.alert("Registrazione effettuata. Effettua il login")
         this.router.navigate(["/login"]);})
     } catch (error) {

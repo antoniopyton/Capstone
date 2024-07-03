@@ -1,0 +1,38 @@
+<form #registerForm="ngForm" (ngSubmit)="onSubmitRegisterArtista(registerForm)" class="w-50 mt-8 m-auto">
+    <h3>Il prossimo palco potrebbe essere il tuo!</h3>
+    <p>Con noi, porti il tuo talento ad un nuovo livello!</p>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="nome" class="form-label m-0">NOME</label>
+        <input type="text" placeholder="Nome" id="nomeRegister" name="nomeRegister" required class="form-control" ngModel />
+      </div>
+      <div class="col-md-6">
+        <label for="cognome" class="form-label m-0">COGNOME</label>
+        <input type="text" placeholder="Cognome" id="cognomeRegister" name="cognomeRegister" required class="form-control" ngModel />
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label m-0">EMAIL</label>
+      <input type="email" placeholder="Email" id="emailRegister" name="emailRegister" required class="form-control my-2" ngModel />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label m-0">PASSWORD</label>
+      <input type="password" placeholder="Password" id="passwordRegister" name="passwordRegister" required class="form-control my-2" ngModel />
+    </div>
+    <div class="mb-3">
+      <label for="tipoArtista" class="form-label">TIPOLOGIA</label>
+      <select id="tipoArtistaRegister" class="form-select" aria-label="Seleziona tipo artista" name="tipoArtistaRegister" required ngModel>
+        <option selected disabled>Seleziona</option>
+        <option value="ARTISTA">ARTISTA</option>
+        <option value="BAND">BAND</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="NomeArtista" class="form-label m-0">NOME D'ARTE</label>
+      <input type="text" placeholder="Nome d'arte" id="nomeArtistaRegister" name="nomeArtistaRegister" required class="form-control my-2" ngModel />
+    </div>
+    <div class="d-grid gap-2 mx-auto">
+      <button class="btn btn-custom mt-2" type="submit" [disabled]="registerForm.invalid">Registrati</button>
+    </div>
+    <p style="font-size: smaller;">Continuando, accetti i Termini di Utilizzo e l'Informativa sulla privacy.</p>
+  </form>

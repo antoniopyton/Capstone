@@ -1,7 +1,5 @@
-<div
-  class="container-fluid d-flex align-content-center justify-content-center flex-column p-7"
->
-  <h1 class="my-5">NOMEPROGETTO</h1>
+<div class="container-fluid d-flex align-content-center justify-content-center flex-column p-7" *ngIf="!isLoggedIn">
+  <h1 class="my-5 text-uppercase">MuzikFest</h1>
 
   <div class="d-flex flex-row mb-5">
     <div class="w-50">
@@ -20,9 +18,7 @@
       </p>
     </div>
   </div>
-  <a class="text-uppercase fs-4 d-flex align-items-center" href=""
-    >scopri di più
-    <span class="material-symbols-outlined mx-2"> arrow_right_alt </span></a
-  >
+  <a class="text-uppercase fs-4 d-flex align-items-center" href="">scopri di più
+    <span class="material-symbols-outlined mx-2"> arrow_right_alt </span></a>
 </div>
 <app-discovery></app-discovery>

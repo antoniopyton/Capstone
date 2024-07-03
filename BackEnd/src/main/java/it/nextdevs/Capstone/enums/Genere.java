@@ -1,0 +1,6 @@
+package it.nextdevs.Capstone.enums;
+
+public enum Genere {
+
+    BLUES, CLASSICAL, COUNTRY, DANCE, ELECTRONIC, FOLK, HIPHOP, INDIE, INDIEPOP, JAZZ, LATIN, METAL, POP, PUNK, ReB, REGGAE, ROCK, SOUL, WORLD
+}

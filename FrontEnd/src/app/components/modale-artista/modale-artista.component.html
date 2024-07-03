@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ artista?.nomeArtista }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body" *ngIf="artista">
+  <div class="img-container text-center">
+    <img [src]="artista.avatar ? artista.avatar : 'assets/omino.png'" class="img-fluid img-square mb-3" alt="{{ artista.nomeArtista }}">
+  </div>
+  <h5>{{ artista.nomeArtista }}</h5>
+  <p>{{ artista.descrizioneArtista }}</p>
+  
+  <!-- Sezione Brani -->
+  <div *ngIf="brani.length > 0" class="brani-section">
+    <h5>Brani di {{ artista.nomeArtista }}</h5>
+    <ul class="list-group">
+      <li *ngFor="let brano of brani" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ brano.titolo }}</span>
+        <span class="badge bg-primary rounded-pill">{{ brano.durata }}</span>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="brani.length === 0">
+    <p>Nessun brano pubblicato.</p>
+  </div>
+  
+  <!-- Sezione Eventi -->
+  <!-- <div *ngIf="eventi.length > 0" class="eventi-section">
+    <h5>Eventi a cui partecipa {{ artista.nomeArtista }}</h5>
+    <ul class="list-group">
+      <li *ngFor="let evento of eventi" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ evento.nome }} - {{ evento.data | date:'dd MMMM' }} - {{ evento.luogo }}</span>
+        <button class="btn btn-primary btn-sm" (click)="acquistaBiglietto(evento.id)">Acquista</button>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="eventi.length === 0">
+    <p>Nessun evento futuro.</p>
+  </div>
+</div> -->
+<div class="modal-body" *ngIf="!artista">
+  <p>Caricamento...</p>
+</div>
+
+  

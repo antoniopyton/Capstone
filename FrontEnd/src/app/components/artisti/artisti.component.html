@@ -1,0 +1,25 @@
+<div class="container my-5">
+    <div class="row mb-4">
+      <div class="col text-center">
+        <h1>Benvenuto nella Sezione Artisti di MuzikFest</h1>
+        <p class="lead">Scopri i talenti iscritti alla nostra piattaforma. Ogni artista porta con sé una storia unica e una passione per la musica. Esplora i loro profili, ascolta la loro musica e connettiti con loro.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 my-3" *ngFor="let artist of artisti">
+        <div class="card h-100 shadow-sm" (click)="openModal(artist.id)">
+          <div class="card-img-wrapper">
+            <img [src]="artist.avatar ? artist.avatar : avatar" class="card-img-top" alt="{{ artist.nomeArtista }}">
+            <div class="overlay">
+              <h5 class="card-title">{{ artist.nomeArtista }}</h5>
+              <a href="#" class="details-link">DETTAGLI →</a>
+            </div>
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ artist.nomeArtista }}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

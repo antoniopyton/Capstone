@@ -1,6 +1,7 @@
 package it.nextdevs.Capstone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.nextdevs.Capstone.enums.TipoArtista;
 import it.nextdevs.Capstone.enums.TipoUtente;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,7 +27,12 @@ public class Utente implements UserDetails {
 
     private String password;
 
+    private String provider;
+
     private String avatar;
+
+    @Enumerated(EnumType.STRING)
+    private TipoArtista tipoArtista;
 
     private String nomeArtista;
 
@@ -47,7 +53,7 @@ public class Utente implements UserDetails {
     private List<Evento> eventiPrenotati = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "artista")
+    @OneToMany(mappedBy = "artista", fetch = FetchType.EAGER)
     private List<Brano> brani;
 
     @JsonIgnore
@@ -57,6 +63,10 @@ public class Utente implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "organizzatore")
     private List<Evento> eventi;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "artistiCandidati")
+    private List<Evento> candidature = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany

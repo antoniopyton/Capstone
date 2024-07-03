@@ -23,3 +23,14 @@ a {
   background-color: #8338EC;
   color: white;
 }
+
+label {
+  color: rgb(189, 189, 189);
+  font-size: small;
+}
+
+input:focus {
+  border-color: #8338EC; 
+  box-shadow: none;
+  outline: none; 
+}

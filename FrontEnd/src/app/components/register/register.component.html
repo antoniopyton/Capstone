@@ -1,27 +1,40 @@
-<div class="container text-center">
+<div class="container text-center mt-5">
   <div class="row">
-    <form   #registerForm="ngForm" (ngSubmit)="onSubmitRegister(registerForm)">
-      <h1>Crea Account</h1>
-      <div class="col-4 d-grid gap-2 mx-auto text-end">
-      <input  type="text" placeholder="Nome" id="nomeRegister" name="nomeRegister" required class="form-control my-2" ngModel />
-      <input type="text" placeholder="Cognome" id="cognomeRegister" name="cognomeRegister" required class="form-control " ngModel />
-      <input type="email" placeholder="Email" id="emailRegister" name="emailRegister" required class="form-control my-2" ngModel  />
-      <input type="password" placeholder="Password" id="passwordRegister" name="passwordRegister" required class="form-control " ngModel />
-      </div>
-      <div class="col-4 d-grid gap-2 mx-auto my-3">
-        <button class="btn btn-custom mt-2" type="submit" [disabled]="registerForm.invalid" >Registrati</button>
-      </div>
-      <p style="font-size: smaller;">Continuando, accetti i Termini di Utilizzo e l'Informativa sulla privacy.</p>
-   
-      </form>
-      <div class="footer-col mt-4">
-        <p>Registrati con:</p>
-        <div class="social-links">
-          <a href="#"><i class="bi bi-facebook"></i></a>
-          <a href="#"><i class="bi bi-twitter"></i></a>
-          <a href="#"><i class="bi bi-google"></i></a>
-          <a href="#"><i class="bi bi-apple"></i></a>
+    <a [routerLink]="['/']" routerLinkActive="active"><h4>LOGO</h4></a>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister(registerForm)">
+      <h2>Crea un nuovo Account</h2>
+      <div class="row d-flex justify-content-center text-start mt-5">
+        <div class="col-2 px-1 mb-3">
+          <label for="nome" class="form-label m-0">NOME</label>
+          <input type="text" placeholder="Nome" id="nomeRegister" name="nomeRegister" required class="form-control" ngModel />
+        </div>
+        <div class="col-2 px-1 mb-3">
+          <label for="cognome" class="form-label m-0">COGNOME</label>
+          <input type="text" placeholder="Cognome" id="cognomeRegister" name="cognomeRegister" required class="form-control" ngModel />
         </div>
       </div>
+      <div class="col-4 d-grid gap-2 mx-auto text-start">
+        <label for="email" class="form-label m-0">EMAIL</label>
+        <input type="email" placeholder="Email" id="emailRegister" name="emailRegister" required class="form-control" ngModel />
+        <label for="password" class="form-label m-0">PASSWORD</label>
+        <input type="password" placeholder="Password" id="passwordRegister" name="passwordRegister" required class="form-control" ngModel />
+      </div>
+      <div class="col-4 d-grid gap-2 mx-auto my-3">
+        <button class="btn btn-custom mt-2" type="submit" [disabled]="registerForm.invalid">Registrati</button>
+      </div>
+    </form>
+    <div class="footer-col mt-4">
+      <p>Registrati con:</p>
+      <div class="social-links mb-3">
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-twitter"></i></a>
+        <a href="#"><i class="bi bi-google"></i></a>
+        <a href="#"><i class="bi bi-apple"></i></a>
+      </div>
+    </div>
+    <div>
+      <p>Hai gia un account? <a [routerLink]="['/login']" routerLinkActive="active">Accedi.</a></p>
+    </div>
+    <p style="font-size: smaller;">Continuando, accetti i Termini di Utilizzo e l'Informativa sulla privacy.</p>
   </div>
-  </div>
+</div>

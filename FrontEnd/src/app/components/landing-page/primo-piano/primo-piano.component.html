@@ -1,4 +1,4 @@
-<div class="container px-7 py-8">
+<div class="container px-7 py-8" id="artisti">
   <h1 class="text-uppercase mb-5">primo piano</h1>
 
   <p>
@@ -6,6 +6,22 @@
     Approfondisci i profili degli artisti, lasciati trasportare dalle loro
     tracce e preparati a vivere le loro performance dal vivo!
   </p>
+
+
+<div class="row  my-3">
+  <div class="col mx-3" *ngFor="let artist of artisti">
+    <div class="card h-100">
+      <img [src]="artist.avatar" class="card-img-top" alt="{{ artist.nomeArtista }}">
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ artist.nomeArtista }}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-start mt-4">
+  <a class="btn btn-custom" [routerLink]="['/artisti']">VISUALIZZA TUTTI →</a>
+</div>
 </div>
 
 <!-- <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">

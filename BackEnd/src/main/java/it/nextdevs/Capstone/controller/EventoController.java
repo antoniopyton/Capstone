@@ -42,6 +42,16 @@ public class EventoController {
         return eventoService.getEventi();
     }
 
+    @GetMapping("/prossimiEventi")
+    public List<Evento> getUpcomingEvents() {
+        return eventoService.getUpcomingEvents();
+    }
+
+    @GetMapping("/eventi/{id}/simili")
+    public List<Evento> getEventiSimili(@PathVariable int id) {
+        return eventoService.getEventiSimili(id);
+    }
+
     @PutMapping("/eventi/{id}")
     @PreAuthorize("hasAnyAuthority('EVENT_CREATOR','ADMIN')")
     public Evento updateEvento(@PathVariable int id, @RequestBody @Validated EventoDto eventoDto, BindingResult bindingResult) {
@@ -73,7 +83,6 @@ public class EventoController {
 //    }
 
     @GetMapping("/eventi/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Optional<Evento> getEventoById(@PathVariable int id) {
         return eventoService.getEventoById(id);
     }
@@ -101,6 +110,14 @@ public class EventoController {
     public String eliminaPrenotazione(@PathVariable int eventoId, @PathVariable int utenteId) {
         return eventoService.eliminaPrenotazione(eventoId, utenteId);
     }
+
+    @PostMapping("/candidature/{eventoId}/{artistaId}")
+    @PreAuthorize("hasAnyAuthority('ARTISTA', 'ADMIN')")
+    public String nuovaCandidatura(@PathVariable int eventoId, @PathVariable int artistaId) {
+        return eventoService.nuovaCandidatura(eventoId, artistaId);
+    }
+
+
 
 //        @GetMapping("/eventi/email/{email}")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")

@@ -1,6 +1,7 @@
 package it.nextdevs.Capstone.configuration;
 
 import com.cloudinary.Cloudinary;
+import com.stripe.Stripe;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.multipart.MultipartResolver;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -15,6 +17,14 @@ import java.util.Properties;
 @Configuration
 @PropertySource("application.properties")
 public class AppConfig {
+
+    @Value("${STRIPE_KEY}")
+    private String stripeKey;
+
+    @PostConstruct
+    public void init(){
+        Stripe.apiKey=stripeKey;
+    }
 
     @Bean
     public Cloudinary uploader(@Value("${cloudinary.name}") String name,

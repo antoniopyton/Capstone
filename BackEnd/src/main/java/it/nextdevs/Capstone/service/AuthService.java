@@ -39,6 +39,9 @@ public class AuthService {
                 utenteDataDto.setEmail(user.getEmail());
                 utenteDataDto.setId(user.getId());
                 utenteDataDto.setTipoUtente(user.getTipoUtente());
+                utenteDataDto.setNomeArtista(user.getNomeArtista());
+                utenteDataDto.setTipoArtista(user.getTipoArtista());
+                utenteDataDto.setDescrizioneArtista(user.getDescrizioneArtista());
                 authDataDto.setUser(utenteDataDto);
                 return authDataDto;
             } else {

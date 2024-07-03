@@ -20,8 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @EnableWebMvc
-@EnableMethodSecurity //Permette di attivare la sicurezza sui metodi del controller con il PreAuthorized
-//public class Config implements WebMvcConfigurer {
+@EnableMethodSecurity
 public class Config implements WebMvcConfigurer {
 
     @Bean
@@ -31,10 +30,8 @@ public class Config implements WebMvcConfigurer {
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.cors(Customizer.withDefaults());
 
-//        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.GET,"/api/users").permitAll());
-//      httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").denyAll());
-
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/api/**").permitAll());
+
 
         httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
 
@@ -42,30 +39,10 @@ public class Config implements WebMvcConfigurer {
 
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:4200")
-//                .allowedMethods("GET", "POST");
-//    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedOrigins(List.of("*"));
-//        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfiguration);
-//
-//        return source;
-//    }
 
     @Bean
     public CorsFilter corsFilter() {

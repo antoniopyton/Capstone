@@ -1,0 +1,45 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  a {
+    color: #8338EC;
+  }
+  
+  .footer-col .social-links a {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: black;
+    transition: all 0.5s ease;
+  }
+  
+  .footer-col .social-links a:hover {
+    color: #24262b;
+    background-color: #ffffff4b;
+  }
+  
+  .btn-custom {
+    background-color: #8338EC;
+    color: white;
+  }
+  
+  label {
+    color: rgb(189, 189, 189);
+    font-size: small;
+  }
+  
+  
+  input:focus {
+    border-color: #8338EC;
+    box-shadow: none;
+    outline: none;
+  }

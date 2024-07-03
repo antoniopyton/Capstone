@@ -1,17 +1,43 @@
-<div class="container-fluid px-7 py-8">
-    <h1 class="text-uppercase">stay tuned</h1>
+<div class="container-fluid px-7 py-8" id="footer">
+    <h1 class="text-uppercase mb-5">stay tuned</h1>
 
-    <div class="my-5">
-        <form>
+    
+    <div class="my-5 row">
+    
+        <p>Iscriviti alla newsletter e ricevi le ultime novità, tracce e aggiornamenti sugli eventi direttamente nella tua inbox!</p>
+
+        <form class="col-8">
             <div class="container-fluid px-0">
-                <input class="form-group col-md-1 me-2 py-2" type="text" id="nome" name="nome" placeholder="Nome" />
+                <input class="form-group col-2  me-2 py-2" type="text" id="nome" name="nome" placeholder="Nome" />
 
-                <input class="form-group col-md-1 ms-2 py-2" type="text" id="cognome" name="cognome" placeholder="Cognome" /> <br>
+                <input class="form-group col-2 ms-2 py-2" type="text" id="cognome" name="cognome" placeholder="Cognome" /> <br>
 
-                <input class="form-group col-md-3 py-2 mt-4" type="text" id="email" name="email" placeholder="Email" />
+                <input class="form-group col-4 py-2 mt-4" type="text" id="email" name="email" placeholder="Email" />
 
             </div>
             <button type="button" class="btn btn-light bg-white button d-flex mt-4 text-uppercase">invia</button>
         </form>
+
+        <div class="col-md-2">
+            <div class="container">
+            <h6>Link Utili</h6>
+            <a href="">Chi Siamo</a> <br>
+            <a href="#discovery">Ascolta nuova musica</a> <br>
+            <a href="#artisti">Artisti in primo piano</a> <br>
+            <a href="#eventi">Prossimi Eventi</a> <br>
+            <a [routerLink]="['/registerr']" routerLinkActive="active">Diventa un'artista</a> <br>
+            <a href="">FAQ</a>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <h6>Legal</h6>
+            <a href="">Termini e Condizioni</a> <br>
+            <a href="">Privacy Policy</a> <br>
+            <a href="">Cookie Policy</a> <br>
+            <h6 class="m-0 p-0">Contatti</h6>
+            <a href="mailto:supporto@muzikfest.com"> supporto@muzikfest.com </a> <br>
+            <a href="tel:11223456"> (+39) 11223456 </a>
+        </div>
     </div>
 </div>

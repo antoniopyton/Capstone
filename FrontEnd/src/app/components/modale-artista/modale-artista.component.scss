@@ -1,0 +1,51 @@
+.modal-body p {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.modal-body {
+  text-align: left;
+}
+
+.img-container {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.img-square {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.brani-section,
+.eventi-section {
+  margin-top: 2rem;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+}
+
+.modal-body h5 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-body p {
+  font-size: 1rem;
+  line-height: 1.5;
+}

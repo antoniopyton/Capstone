@@ -24,7 +24,11 @@ export class LoginComponent implements OnInit {
     onSubmit(form:NgForm) {
       try {
         this.authSrv.login(form.value).subscribe((data) => {
-          this.router.navigate(['/'])
+          if(data.user.tipoUtente !== 'Utente_basic') {
+            this.router.navigate(['/dashboardArtista'])
+          } else {
+            this.router.navigate(['/'])
+          }
         });
       } catch (error) {
         console.log(error)

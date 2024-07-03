@@ -1,0 +1,214 @@
+  h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    color: black;
+}
+
+h6 {
+    font-size: 1.2rem;
+    font-weight: bolder;
+}
+
+p {
+    font-size: 1.2rem;
+    line-break: normal;
+}
+
+a {
+    color:  #8338EC;
+}
+  
+  .status {
+    margin-top: 10px;
+  }
+  
+  .status .badge-success {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  .event-date-location {
+    font-size: 18px;
+    color: #777;
+    margin-top: 10px;
+  }
+  
+  .event-description {
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .event-details {
+    margin-top: 30px;
+  }
+  
+  .event-details h5 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .event-details p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .event-details .material-icons {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  
+  .ticket-purchase-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .ticket-purchase-card h5 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .quantity-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .quantity-selector button {
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .quantity-selector input {
+    width: 60px;
+    text-align: center;
+    margin: 0 10px;
+    border: 1px solid #ddd;
+    height: 30px;
+  }
+  
+  .ticket-purchase-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left;
+    width: 100%;
+    max-width: 300px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ticket-purchase-card h5 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .quantity-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .quantity-selector span {
+    font-size: 14px;
+  }
+  
+  .quantity-buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity-buttons button {
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .quantity-buttons input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    height: 30px;
+    margin: 0 5px;
+  }
+  
+  .price-details {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .price-row.total {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .btn-primary {
+    background-color: #8338EC;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-primary:hover {
+    background-color: #563d7c;
+  }
+  
+  .material-icons {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+
+  .acquista {
+    color: gray;
+  }
+  
+  .disponibili {
+    background-color: white;
+    color: #00B050;
+}
+
+.in-esaurimento {
+    background-color: white;
+    color: #C99700;
+}
+
+.esauriti {
+    background-color: white;
+    color: #FF0000;
+}
+
+.bordinoNero {
+  border-bottom: 1px solid black;
+}

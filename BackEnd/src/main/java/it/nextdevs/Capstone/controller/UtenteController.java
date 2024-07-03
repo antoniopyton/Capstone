@@ -4,6 +4,7 @@ import it.nextdevs.Capstone.DTO.UtenteDataDto;
 import it.nextdevs.Capstone.DTO.UtenteDto;
 import it.nextdevs.Capstone.exception.BadRequestException;
 import it.nextdevs.Capstone.exception.NotFoundException;
+import it.nextdevs.Capstone.model.Brano;
 import it.nextdevs.Capstone.model.Utente;
 import it.nextdevs.Capstone.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,8 +34,12 @@ public class UtenteController {
         return utenteService.getAllUtenti(page, size, sortBy);
     }
 
+    @GetMapping("/artisti")
+    public List<Utente> getAllArtisti() {
+        return utenteService.getAllArtisti();
+    }
+
     @GetMapping("/utenti/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Utente getUtenteById(@PathVariable int id) throws NotFoundException {
         Optional<Utente> userOptional = utenteService.getUserById(id);
         if (userOptional.isPresent()) {
@@ -41,6 +47,17 @@ public class UtenteController {
         } else {
             throw new NotFoundException("User con id: "+id+" non trovata");
         }
+    }
+
+
+    @GetMapping("/utenti/nome/{nome}")
+    public Utente getUtenteByNome(@PathVariable String nome) {
+        return utenteService.getUtenteByNome(nome);
+    }
+
+    @PatchMapping("/utenti/2/{id}")
+    public Utente register2(@PathVariable int id, @RequestBody UtenteDto utenteDto) {
+        return utenteService.updateDescrizione(id, utenteDto);
     }
 
     @PutMapping("/utenti/{id}")

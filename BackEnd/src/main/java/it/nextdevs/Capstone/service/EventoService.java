@@ -2,14 +2,20 @@ package it.nextdevs.Capstone.service;
 
 import com.cloudinary.Cloudinary;
 import it.nextdevs.Capstone.DTO.EventoDto;
+import it.nextdevs.Capstone.enums.StatoBiglietti;
+import it.nextdevs.Capstone.enums.TipoUtente;
+import it.nextdevs.Capstone.exception.BadRequestException;
 import it.nextdevs.Capstone.exception.NotFoundException;
 import it.nextdevs.Capstone.model.Evento;
 import it.nextdevs.Capstone.model.Utente;
 import it.nextdevs.Capstone.repository.EventoRepository;
 import it.nextdevs.Capstone.repository.UtenteRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventoService {
@@ -47,7 +54,9 @@ public class EventoService {
         evento.setNome(eventoDto.getNome());
         evento.setLuogo(eventoDto.getLuogo());
         evento.setData(eventoDto.getData());
+        evento.setDataInserimento(LocalDate.now());
         evento.setTipoEvento(eventoDto.getTipoEvento());
+        evento.setStatoBiglietti(StatoBiglietti.DISPONIBILI);
         evento.setPostiDisponibili(eventoDto.getPostiDisponibili());
         evento.setDescrizione(eventoDto.getDescrizione());
         evento.setCapienzaMax(eventoDto.getCapienzaMax());
@@ -64,6 +73,29 @@ public class EventoService {
 
     public List<Evento> getEventi() {
         return eventoRepository.findAll();
+    }
+
+    public List<Evento> getUpcomingEvents() {
+        LocalDate now = LocalDate.now();
+        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+        LocalDate startOfNextMonth = now.plusMonths(1).withDayOfMonth(1);
+        LocalDate endOfFirstWeekOfNextMonth = startOfNextMonth.plusDays(6);
+
+        return eventoRepository.findByDataBetween(now, endOfFirstWeekOfNextMonth);
+    }
+
+    public List<Evento> getEventiSimili(int id) {
+        Evento evento = eventoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Evento non trovato"));
+
+        LocalDate startDate = evento.getData().minusDays(10);
+        LocalDate endDate = evento.getData().plusDays(10);
+
+        List<Evento> eventiSimili = eventoRepository.findByLuogoAndDataBetween(evento.getLuogo(), startDate, endDate);
+
+        return eventiSimili.stream()
+                .filter(e -> e.getId() != evento.getId())
+                .collect(Collectors.toList());
     }
 
     public Evento updateEvento(int id, EventoDto eventoDto) {
@@ -112,11 +144,11 @@ public class EventoService {
     }
 
     public Evento patchImmagineEvento(Integer id, MultipartFile avatar) throws IOException {
-        Optional<Evento> clienteOptional = getEventoById(id);
+        Optional<Evento> eventoOptional = getEventoById(id);
 
-        if (clienteOptional.isPresent()) {
+        if (eventoOptional.isPresent()) {
             String url = (String) cloudinary.uploader().upload(avatar.getBytes(), Collections.emptyMap()).get("url");
-            Evento evento = clienteOptional.get();
+            Evento evento = eventoOptional.get();
             evento.setImmagine(url);
             eventoRepository.save(evento);
             return evento;
@@ -144,8 +176,9 @@ public class EventoService {
             eventiPrenotati.add(evento);
             utente.setEventiPrenotati(eventiPrenotati);
             evento.setPostiDisponibili(evento.getPostiDisponibili() - 1);
+            evento.aggiornaStato();
             eventoRepository.save(evento);
-            sendMailEvento(utente.getEmail());
+            sendMailEvento(utente.getEmail(), evento.getNome(), evento.getData(), evento.getLuogo());
             return "Prenotazione effettuata con successo!";
         } else {
             throw new IllegalStateException("Non ci sono posti disponibili.");
@@ -167,14 +200,90 @@ public class EventoService {
         }
     }
 
-    private void sendMailEvento(String email) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Prenotazione Evento");
-        message.setText("Grazie per esserti prenotato ad uno dei nostri eventi Unici. Possiamo confermarti che la prenotazione all'evento è avvenuta con successo" +
-                "Potrai disdirla in qualsiasi momento!");
+    public String nuovaCandidatura(int eventoId, int artistaId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElse(null);
+        Utente artista = utenteRepository.findById(artistaId)
+                .orElse(null);
 
-        javaMailSender.send(message);
+        if (evento == null || artista == null) {
+            return "Evento o artista non trovato.";
+        }
+
+        if (evento.getArtistiCandidati().contains(artista)) {
+            return "Hai già fatto domanda per questo evento.";
+        }
+
+        evento.getArtistiCandidati().add(artista);
+        eventoRepository.save(evento);
+
+        sendMailCandidatura(artista.getEmail(), artista.getNomeArtista(), evento.getNome());
+
+        return "Candidatura effettuata con successo!";
+    }
+
+    private void sendMailEvento(String email, String nomeEvento, LocalDate dataEvento, String luogoEvento) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Conferma Prenotazione Evento");
+
+            String htmlMsg = String.format("""
+            <html>
+                <body>
+                    <p>Ciao,</p>
+                    <p>Grazie per aver prenotato uno dei nostri eventi unici! Siamo entusiasti di confermare la tua prenotazione.</p>
+                    <p>Dettagli dell'evento:</p>
+                    <ul>
+                        <li>Nome evento: <strong>%s</strong></li>
+                        <li>Data: <strong>%s</strong></li>
+                        <li>Luogo: <strong>%s</strong></li>
+                    </ul>
+                    <p>Non vediamo l'ora di averti con noi! Se hai bisogno di annullare la tua prenotazione, puoi farlo in qualsiasi momento tramite il nostro sito.</p>
+                    <p>Se hai domande o necessiti di assistenza, il nostro team di supporto è a tua disposizione. Puoi contattarci via email a <a href="mailto:muzikfest@supporto.com">muzikfest@supporto.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
+                    <p>A presto!</p>
+                    <p>Il team di MuzikFest</p>
+                </body>
+            </html>
+            """, nomeEvento, dataEvento, luogoEvento);
+            helper.setText(htmlMsg, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BadRequestException("Non è stato possibile inviare la mail");
+        }
+    }
+
+    private void sendMailCandidatura(String email, String nomeArtista, String nomeEvento) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Candidatura per Evento su MuzikFest");
+
+            String htmlMsg = String.format("""
+            <html>
+                <body>
+                    <p>Ciao %s,</p>
+                    <p>Grazie per aver inviato la tua candidatura per l'evento <strong>%s</strong>! Siamo felici che tu voglia esibirti con noi.</p>
+                    <p>Il nostro team valuterà la tua candidatura e ti faremo sapere l'esito il prima possibile.</p>
+                    <p>Nel frattempo, puoi continuare ad esplorare la nostra piattaforma e scoprire altre opportunità per esibirti e connetterti con la community di MuzikFest.</p>
+                    <p>Se hai domande o necessiti di assistenza, il nostro team di supporto è a tua disposizione. Puoi contattarci via email a <a href="mailto:muzikfest@supporto.com">muzikfest@supporto.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
+                    <p>Grazie ancora per aver scelto MuzikFest. Non vediamo l'ora di vedere la tua performance!</p>
+                    <p>Un caloroso saluto,</p>
+                    <p>Il team di MuzikFest</p>
+                </body>
+            </html>
+            """, nomeArtista, nomeEvento);
+            helper.setText(htmlMsg, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new BadRequestException("Non è stato possibile inviare la mail");
+        }
     }
 
     private void sendMailDisdetta(String email) {
@@ -186,47 +295,5 @@ public class EventoService {
 
         javaMailSender.send(message);
     }
-
-//    public List<Evento> getAllEventi(Map<String, String> allParams) {
-//        if (allParams.isEmpty()) return clienteRepository.findAll();
-//        List<Cliente> clienti = clienteRepository.findAll();
-//        for (Map.Entry<String, String> entry : allParams.entrySet()) {
-//            if (entry.getKey().equals("fatturatoMin")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getFatturatoAnnuale() >= Double.parseDouble(entry.getValue())).toList();
-//            }
-//            if (entry.getKey().equals("fatturatoMax")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getFatturatoAnnuale() <= Double.parseDouble(entry.getValue())).toList();
-//            }
-//            if (entry.getKey().equals("inserimentoMin")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getDataInserimento().isAfter(LocalDate.parse(entry.getValue()))).toList();
-//            }
-//            if (entry.getKey().equals("inserimentoMax")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getDataInserimento().isBefore(LocalDate.parse(entry.getValue()))).toList();
-//            }
-//            if (entry.getKey().equals("ultimoContattoMin")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getDataUltimoContatto().isAfter(LocalDate.parse(entry.getValue()))).toList();
-//            }
-//            if (entry.getKey().equals("ultimoContattoMax")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getDataUltimoContatto().isBefore(LocalDate.parse(entry.getValue()))).toList();
-//            }
-//            if (entry.getKey().equals("ragioneSociale")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getRagioneSociale().contains(entry.getValue())).toList();
-//            }
-//            if (entry.getKey().equals("nomeContatto")) {
-//                clienti = clienti.stream().filter(cliente -> cliente.getRagioneSociale().contains(entry.getValue())).toList();
-//            }
-//        }
-//        return clienti;
-//    }
-//
-//    private void sendMailRegistrazione(String email) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(email);
-//        message.setSubject("Registrazione Cliente");
-//        message.setText("Registrazione Cliente avvenuta con successo");
-//
-//        javaMailSender.send(message);
-//    }
-
 
 }
