@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy   {
     @HostListener('window:scroll', [])
     onWindowScroll() {
     const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    this.isScrolled = offset > 2900 && offset < 3800; 
+    this.isScrolled = offset > 2200 && offset < 3100; 
   }
 
   ngOnDestroy() {

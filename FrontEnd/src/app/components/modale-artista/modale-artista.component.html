@@ -24,21 +24,19 @@
   </div>
   
   <!-- Sezione Eventi -->
-  <!-- <div *ngIf="eventi.length > 0" class="eventi-section">
+  <div *ngIf="eventi.length > 0" class="eventi-section mt-4">
     <h5>Eventi a cui partecipa {{ artista.nomeArtista }}</h5>
     <ul class="list-group">
       <li *ngFor="let evento of eventi" class="list-group-item d-flex justify-content-between align-items-center">
         <span>{{ evento.nome }} - {{ evento.data | date:'dd MMMM' }} - {{ evento.luogo }}</span>
-        <button class="btn btn-primary btn-sm" (click)="acquistaBiglietto(evento.id)">Acquista</button>
+        <button class="btn btn-primary btn-sm" (click)="goToEventDetails(evento.id)">Acquista</button>
       </li>
     </ul>
   </div>
   <div *ngIf="eventi.length === 0">
     <p>Nessun evento futuro.</p>
   </div>
-</div> -->
+</div>
 <div class="modal-body" *ngIf="!artista">
   <p>Caricamento...</p>
 </div>
-
-  

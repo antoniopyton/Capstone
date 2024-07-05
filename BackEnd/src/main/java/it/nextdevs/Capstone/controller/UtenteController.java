@@ -49,7 +49,6 @@ public class UtenteController {
         }
     }
 
-
     @GetMapping("/utenti/nome/{nome}")
     public Utente getUtenteByNome(@PathVariable String nome) {
         return utenteService.getUtenteByNome(nome);
@@ -76,8 +75,8 @@ public class UtenteController {
     }
 
     @PatchMapping(value = "/utenti/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UtenteDataDto patchAvatarUtente(@PathVariable int id, @RequestParam("file") MultipartFile avatar) throws IOException {
-        return utenteService.patchAvatarUtente(id, avatar);
+    public UtenteDataDto patchAvatarUtente(@PathVariable int id, @RequestParam("file") MultipartFile file) throws IOException {
+        return utenteService.patchAvatarUtente(id, file);
     }
 
     @DeleteMapping("/utenti/{id}")

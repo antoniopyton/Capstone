@@ -10,7 +10,7 @@
 
 <div class="row  my-3">
   <div class="col mx-3" *ngFor="let artist of artisti">
-    <div class="card h-100">
+    <div class="card h-100"  (click)="openModal(artist.id)">
       <img [src]="artist.avatar" class="card-img-top" alt="{{ artist.nomeArtista }}">
       <div class="card-body text-center">
         <h5 class="card-title">{{ artist.nomeArtista }}</h5>

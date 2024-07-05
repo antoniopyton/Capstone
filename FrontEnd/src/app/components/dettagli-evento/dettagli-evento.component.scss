@@ -212,3 +212,47 @@ a {
 .bordinoNero {
   border-bottom: 1px solid black;
 }
+
+.card {
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-img-wrapper {
+  position: relative;
+}
+
+.card-img-top {
+  height: 300px;
+  object-fit: cover;
+  transition: opacity 0.3s;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transition: opacity 0.3s;
+  padding: 10px;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.card-body {
+  height: 70px;
+  overflow: hidden;
+}

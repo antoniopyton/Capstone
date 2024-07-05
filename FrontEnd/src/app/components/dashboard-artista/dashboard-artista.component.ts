@@ -1,12 +1,14 @@
-import { Component, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Brani } from 'src/app/interface/brani.interface';
+import { Eventi } from 'src/app/interface/eventi.interface';
 import { Utente } from 'src/app/interface/utente.interface';
 import { FileUpload } from 'src/app/model/file-upload';
 import { ArtistiService } from 'src/app/service/artisti.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { BraniService } from 'src/app/service/brani.service';
+import { EventiService } from 'src/app/service/eventi.service';
 import { FileUploadService } from 'src/app/service/file-upload.service';
 
 @Component({
@@ -24,11 +26,14 @@ export class DashboardArtistaComponent implements OnInit {
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
   percentage = 0;
+  isEditingDescrizione: boolean = false;
+  newDescrizione: string = '';
   fileUrl: string = '';
   artista: Utente | undefined;
   ascoltiSettimanali: number = 0;
   ascoltiMensili: number = 0;
   ascoltiGiornalieri: number = 0;
+  eventi: Eventi[] = [];
 
   constructor(
     private authSrv: AuthService,
@@ -36,10 +41,14 @@ export class DashboardArtistaComponent implements OnInit {
     private braniSrv: BraniService,
     private router: Router,
     private uploadSrv: FileUploadService,
-    private renderer: Renderer2
+    private eventiSrv: EventiService
   ) {
     this.authSrv.user$.subscribe(data => {
       this.artista = data?.user;
+
+      if(this.artista)
+
+      this.getEventiByArtista(this.artista?.id);
     });
   }
 
@@ -60,6 +69,28 @@ export class DashboardArtistaComponent implements OnInit {
         this.user.brani = brani;
       }
     });
+  }
+
+  toggleEditDescrizione(): void {
+    this.isEditingDescrizione = !this.isEditingDescrizione;
+    if (this.isEditingDescrizione && this.artista) {
+      this.newDescrizione = this.artista.descrizioneArtista || '';
+    }
+  }
+
+  saveDescrizione(): void {
+    if (this.artista) {
+      this.artista.descrizioneArtista = this.newDescrizione;
+      this.authSrv.registerArtist2(this.artista.id, { descrizioneArtista: this.newDescrizione }).subscribe(
+        (response) => {
+          console.log('Descrizione aggiornata con successo:', response);
+          this.isEditingDescrizione = false;
+        },
+        (error) => {
+          console.error('Errore durante l\'aggiornamento della descrizione', error);
+        }
+      );
+    }
   }
 
   onFileSelected(event: Event): void {
@@ -84,6 +115,11 @@ export class DashboardArtistaComponent implements OnInit {
 
       reader.readAsDataURL(file);
     }
+  }
+
+  triggerFileInput(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
   }
 
   selectFile(event: any, type: 'brano' | 'cover'): void {
@@ -185,14 +221,18 @@ export class DashboardArtistaComponent implements OnInit {
       this.ascoltiGiornalieri = ascolti;
     });
   }
-  
 
-
-  triggerFileInput(): void {
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    fileInput.click();
+  getEventiByArtista(artistaId: number): void {  
+    this.eventiSrv.getEventiByArtista(artistaId).subscribe(
+      (eventi: Eventi[]) => {
+        this.eventi = eventi;
+      },
+      (error) => {
+        console.error('Errore nel recupero degli eventi', error);
+      }
+    );
   }
-
+  
   updatePassword(): void {
     try {
       const newPassword = (document.getElementById('newPassword') as HTMLInputElement).value;
@@ -238,4 +278,5 @@ export class DashboardArtistaComponent implements OnInit {
       console.error(`Song element with id 'song${id}' not found`);
     }
   }
+  
 }

@@ -27,4 +27,11 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     @Query("SELECT e FROM Evento e WHERE e.luogo = :luogo AND e.data BETWEEN :startDate AND :endDate")
     List<Evento> findByLuogoAndDataBetween(@Param("luogo") String luogo, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT e FROM Evento e JOIN e.artistiCandidati a WHERE a.id = :artistaId")
+    List<Evento> findEventiByArtistaId(@Param("artistaId") int artistaId);
+
+    @Query("SELECT e FROM Evento e JOIN e.utentiPrenotati u WHERE u.id = :utenteId")
+    List<Evento> findEventiPrenotatiByUtenteId(@Param("utenteId") int utenteId);
+
+
 }

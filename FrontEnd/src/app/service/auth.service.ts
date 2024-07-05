@@ -36,11 +36,15 @@ export class AuthService {
     );
   }
 
+  updateAvatar(id: number, formData: FormData) : Observable<Utente> {
+    return this.http.patch<Utente>(`${environment.apiUrl}utenti/${id}/avatar`, formData)
+  }
+
   uploadFile(file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
 
-    const url = `${environment.apiUrl}/upload`; 
+    const url = `${environment.apiUrl}upload`; 
     return this.http.post(url, formData)
       .pipe(
         catchError(this.handleError)

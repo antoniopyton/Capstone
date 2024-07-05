@@ -1,22 +1,21 @@
 <form #registerForm="ngForm" (ngSubmit)="onSubmitDati(registerForm)" class="w-50 mt-8 m-auto">
-    <h3>Completa il profilo!</h3>
-    <p>
-      Puoi completare questi dettagli anche in un secondo momento dalla
-      dashboard del tuo profilo, dove potrai anche caricare i tuoi primi brani.
-    </p>
-    <label for="fileInput" class="form-label m-0">Foto Profilo</label>
-    <input type="file" id="fileInput" (change)="selectFile($event)" class="form-control">
-    <div class="mb-3">
-      <label for="descrizione" class="form-label m-0 mt-3">DESCRIZIONE</label>
-      <textarea class="form-control" name="descrizioneRegister" id="descrizioneRegister" placeholder="Descrizione" ngModel></textarea>
-    </div>
-    <div class="d-grid gap-2 mx-auto">
-      <button class="btn btn-custom mt-2 text-uppercase" (click)="skipToDashboard()" type="button">
-        Salta
-      </button>
-      <button class="btn btn-custom mt-2 text-uppercase" type="submit" [disabled]="registerForm.invalid">
-        Salva Modifiche
-      </button>
-    </div>
-  </form>
-  
+  <h3>Completa il profilo!</h3>
+  <p>
+    Puoi completare questi dettagli anche in un secondo momento dalla
+    dashboard del tuo profilo, dove potrai anche caricare i tuoi primi brani.
+  </p>
+  <label for="fileInput" class="form-label m-0">Foto Profilo</label>
+  <input type="file" id="fileInput" (change)="selectFile($event)" class="form-control">
+  <div class="mb-3">
+    <label for="descrizione" class="form-label m-0 mt-3">DESCRIZIONE</label>
+    <textarea class="form-control" name="descrizioneRegister" id="descrizioneRegister" placeholder="Descrizione" ngModel></textarea>
+  </div>
+  <div class="d-grid gap-2 mx-auto">
+    <button class="btn btn-custom mt-2 text-uppercase" (click)="skipToDashboard()" type="button">
+      Salta
+    </button>
+    <button class="btn btn-custom mt-2 text-uppercase" type="submit" [disabled]="registerForm.invalid">
+      Salva Modifiche
+    </button>
+  </div>
+</form>

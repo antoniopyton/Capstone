@@ -3,6 +3,7 @@ package it.nextdevs.Capstone.controller;
 import it.nextdevs.Capstone.DTO.EventoDto;
 import it.nextdevs.Capstone.exception.BadRequestException;
 import it.nextdevs.Capstone.model.Evento;
+import it.nextdevs.Capstone.model.Utente;
 import it.nextdevs.Capstone.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,24 @@ public class EventoController {
         return eventoService.getEventi();
     }
 
+    @GetMapping("/utenti/{id}/prenotazioni")
+    public List<Evento> getEventiPrenotati(@PathVariable int id) {
+        return eventoService.getEventiPrenotati(id);
+    }
+
     @GetMapping("/prossimiEventi")
     public List<Evento> getUpcomingEvents() {
         return eventoService.getUpcomingEvents();
+    }
+
+    @GetMapping("/eventi/{eventoId}/artisti-candidati")
+    public List<Utente> getArtistiCandidati(@PathVariable int eventoId) {
+        return eventoService.getArtistiCandidati(eventoId);
+    }
+
+    @GetMapping("/artista/{id}")
+    public List<Evento> getEventiByArtista(@PathVariable int id) {
+        return eventoService.getEventiByArtista(id);
     }
 
     @GetMapping("/eventi/{id}/simili")
@@ -76,12 +92,6 @@ public class EventoController {
         return eventoService.getEventoByDataInserimento(dataInserimento);
     }
 
-//    @GetMapping("/eventi/ordinatiPerNome/{order}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN')")
-//    public List<Evento> getEventiOrdinatiPerNome(@PathVariable String order) {
-//        return eventoService.getEventiOrdinatiPerNome(order);
-//    }
-
     @GetMapping("/eventi/{id}")
     public Optional<Evento> getEventoById(@PathVariable int id) {
         return eventoService.getEventoById(id);
@@ -99,11 +109,10 @@ public class EventoController {
     }
 
     @PostMapping("/prenotazioni/{eventoId}/{utenteId}")
-    @PreAuthorize("hasAnyAuthority('EVENT_CREATOR','ADMIN', 'UTENTE_BASIC')")
-    public String nuovaPrenotazione(@PathVariable int eventoId, @PathVariable int utenteId) {
-        return eventoService.nuovaPrenotazione(eventoId, utenteId);
+    public String nuovaPrenotazione(@PathVariable int eventoId, @PathVariable int utenteId, @RequestBody Map<String, Integer> request) {
+        int quantita = request.get("quantita");
+        return eventoService.nuovaPrenotazione(eventoId, utenteId, quantita);
     }
-
 
     @DeleteMapping("/prenotazioni/{eventoId}/{utenteId}")
     @PreAuthorize("hasAnyAuthority('EVENT_CREATOR','ADMIN', 'UTENTE_BASIC')")

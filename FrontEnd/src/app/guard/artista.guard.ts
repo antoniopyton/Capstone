@@ -18,7 +18,7 @@ export class ArtistaGuard implements CanActivate{
     return this.authSrv.user$.pipe(
       take(1),
       map((user) => {
-        if (user && user.user.tipoUtente === 'Artista') {
+        if (user && user.user.tipoUtente === 'ARTISTA') {
           return true;
         }
         return this.router.createUrlTree(['/']);

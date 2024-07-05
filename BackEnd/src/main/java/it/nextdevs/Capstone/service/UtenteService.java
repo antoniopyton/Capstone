@@ -192,11 +192,11 @@ public class UtenteService {
         }
     }
 
-    public UtenteDataDto patchAvatarUtente(Integer id, MultipartFile avatar) throws IOException {
+    public UtenteDataDto patchAvatarUtente(Integer id, MultipartFile file) throws IOException {
         Optional<Utente> utenteOptional = getUserById(id);
 
         if (utenteOptional.isPresent()) {
-            String url = (String) cloudinary.uploader().upload(avatar.getBytes(), Collections.emptyMap()).get("url");
+            String url = (String) cloudinary.uploader().upload(file.getBytes(), Collections.emptyMap()).get("url");
             Utente utente = utenteOptional.get();
             utente.setAvatar(url);
             utenteRepository.save(utente);

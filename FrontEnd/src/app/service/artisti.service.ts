@@ -46,6 +46,8 @@ private apiUrl=environment.apiUrl;
     return this.http.get<number>(`${this.apiUrl}artisti/${artistaId}/ascolti/giorno`);
   }
 
+  
+
   private errors(err: any) {
     console.log(err)
       let error = "";

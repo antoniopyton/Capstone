@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Brani } from 'src/app/interface/brani.interface';
+import { AuthService } from 'src/app/service/auth.service';
 import { BraniService } from 'src/app/service/brani.service';
 
 @Component({
@@ -12,10 +13,17 @@ export class DiscoveryComponent implements OnInit {
   top5Brani: Brani[] = [];
   isLoggedIn = false; 
 
-  constructor(private braniSrv: BraniService) {}
+  constructor(private braniSrv: BraniService, private authSrv: AuthService) {}
 
   ngOnInit(): void {
     this.getTop5Brani();
+    this.authSrv.user$.subscribe(data => {
+      if (data?.user) {
+        this.isLoggedIn = true
+      } else {
+        false
+      }
+    })
   }
 
   getTop5Brani(): void {

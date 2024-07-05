@@ -12,7 +12,7 @@ export class UtentiService {
   constructor(private http:HttpClient) { }
 
   updateUser(id: number, user: Utente): Observable<Utente> {
-    const url = `${this.apiUrl}/utenti/${id}`;
+    const url = `${this.apiUrl}utenti/${id}`;
     return this.http.put<Utente>(url, user);
   }
 

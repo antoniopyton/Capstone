@@ -75,6 +75,10 @@ public class EventoService {
         return eventoRepository.findAll();
     }
 
+    public List<Evento> getEventiPrenotati(int utenteId) {
+        return eventoRepository.findEventiPrenotatiByUtenteId(utenteId);
+    }
+
     public List<Evento> getUpcomingEvents() {
         LocalDate now = LocalDate.now();
         LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
@@ -96,6 +100,15 @@ public class EventoService {
         return eventiSimili.stream()
                 .filter(e -> e.getId() != evento.getId())
                 .collect(Collectors.toList());
+    }
+
+    public List<Utente> getArtistiCandidati(int eventoId) {
+        Optional<Evento> eventoOptional = eventoRepository.findById(eventoId);
+        if (eventoOptional.isPresent()) {
+            return eventoOptional.get().getArtistiCandidati();
+        } else {
+            throw new NotFoundException("Evento non trovato");
+        }
     }
 
     public Evento updateEvento(int id, EventoDto eventoDto) {
@@ -133,6 +146,10 @@ public class EventoService {
         return eventoRepository.findAllByDataInserimento(dataInserimento);
     }
 
+    public List<Evento> getEventiByArtista(int artistaId) {
+        return eventoRepository.findEventiByArtistaId(artistaId);
+    }
+
     public List<Evento> getEventiOrdinatiPerNome(String order) {
         if (order.equals("ASC")) {
             return eventoRepository.findAllByOrderByNomeAsc();
@@ -167,21 +184,23 @@ public class EventoService {
         }
     }
 
-    public String nuovaPrenotazione(int eventoId, int utenteId) {
+    public String nuovaPrenotazione(int eventoId, int utenteId, int quantita) {
         Evento evento = eventoRepository.findById(eventoId).orElseThrow(() -> new NotFoundException("Evento non trovato"));
         Utente utente = utenteRepository.findById(utenteId).orElseThrow(() -> new NotFoundException("Utente non trovato"));
 
-        if (evento.getPostiDisponibili() > 0) {
+        if (evento.getPostiDisponibili() >= quantita) {
             List<Evento> eventiPrenotati = utente.getEventiPrenotati();
-            eventiPrenotati.add(evento);
+            for (int i = 0; i < quantita; i++) {
+                eventiPrenotati.add(evento);
+            }
             utente.setEventiPrenotati(eventiPrenotati);
-            evento.setPostiDisponibili(evento.getPostiDisponibili() - 1);
+            evento.setPostiDisponibili(evento.getPostiDisponibili() - quantita);
             evento.aggiornaStato();
             eventoRepository.save(evento);
-            sendMailEvento(utente.getEmail(), evento.getNome(), evento.getData(), evento.getLuogo());
+            sendMailEvento(utente.getEmail(), evento.getNome(), evento.getData(), evento.getLuogo(), quantita);
             return "Prenotazione effettuata con successo!";
         } else {
-            throw new IllegalStateException("Non ci sono posti disponibili.");
+            throw new IllegalStateException("Non ci sono abbastanza posti disponibili.");
         }
     }
 
@@ -222,7 +241,7 @@ public class EventoService {
         return "Candidatura effettuata con successo!";
     }
 
-    private void sendMailEvento(String email, String nomeEvento, LocalDate dataEvento, String luogoEvento) {
+    private void sendMailEvento(String email, String nomeEvento, LocalDate dataEvento, String luogoEvento, int quantita) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -231,23 +250,24 @@ public class EventoService {
             helper.setSubject("Conferma Prenotazione Evento");
 
             String htmlMsg = String.format("""
-            <html>
-                <body>
-                    <p>Ciao,</p>
-                    <p>Grazie per aver prenotato uno dei nostri eventi unici! Siamo entusiasti di confermare la tua prenotazione.</p>
-                    <p>Dettagli dell'evento:</p>
-                    <ul>
-                        <li>Nome evento: <strong>%s</strong></li>
-                        <li>Data: <strong>%s</strong></li>
-                        <li>Luogo: <strong>%s</strong></li>
-                    </ul>
-                    <p>Non vediamo l'ora di averti con noi! Se hai bisogno di annullare la tua prenotazione, puoi farlo in qualsiasi momento tramite il nostro sito.</p>
-                    <p>Se hai domande o necessiti di assistenza, il nostro team di supporto è a tua disposizione. Puoi contattarci via email a <a href="mailto:muzikfest@supporto.com">muzikfest@supporto.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
-                    <p>A presto!</p>
-                    <p>Il team di MuzikFest</p>
-                </body>
-            </html>
-            """, nomeEvento, dataEvento, luogoEvento);
+        <html>
+            <body>
+                <p>Ciao,</p>
+                <p>Grazie per aver prenotato uno dei nostri eventi unici! Siamo entusiasti di confermare la tua prenotazione.</p>
+                <p>Dettagli dell'evento:</p>
+                <ul>
+                    <li>Nome evento: <strong>%s</strong></li>
+                    <li>Data: <strong>%s</strong></li>
+                    <li>Luogo: <strong>%s</strong></li>
+                    <li>Quantità biglietti: <strong>%d</strong></li>
+                </ul>
+                <p>Non vediamo l'ora di averti con noi! Se hai bisogno di annullare la tua prenotazione, puoi farlo in qualsiasi momento tramite il nostro sito.</p>
+                <p>Se hai domande o necessiti di assistenza, il nostro team di supporto è a tua disposizione. Puoi contattarci via email a <a href="mailto:muzikfest@supporto.com">muzikfest@supporto.com</a> o visitare il nostro <a href="http://example.com/centro-assistenza">centro assistenza</a>.</p>
+                <p>A presto!</p>
+                <p>Il team di MuzikFest</p>
+            </body>
+        </html>
+        """, nomeEvento, dataEvento, luogoEvento, quantita);
             helper.setText(htmlMsg, true);
 
             javaMailSender.send(mimeMessage);

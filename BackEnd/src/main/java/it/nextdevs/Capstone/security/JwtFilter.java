@@ -70,7 +70,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 new AntPathMatcher().match("/prossimiEventi", request.getServletPath())  ||
                 new AntPathMatcher().match("/eventi/{id}", request.getServletPath()) ||
                 new AntPathMatcher().match("/eventi/{id}/simili", request.getServletPath()) ||
-                new AntPathMatcher().match("/api/payment", request.getServletPath());
+                new AntPathMatcher().match("/eventi/{eventoId}/artisti-candidati", request.getServletPath()) ||
+                new AntPathMatcher().match("/artista/{id}", request.getServletPath());
+
+
 
 
 

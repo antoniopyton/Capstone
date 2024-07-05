@@ -41,6 +41,7 @@ import { DettagliEventoComponent } from './components/dettagli-evento/dettagli-e
 import { SuccessComponent } from './components/stripe/success/success.component';
 import { CancelComponent } from './components/stripe/cancel/cancel.component';
 import { CheckoutComponent } from './components/stripe/checkout/checkout.component';
+import { ProfiloUtenteComponent } from './components/profilo-utente/profilo-utente.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { CheckoutComponent } from './components/stripe/checkout/checkout.compone
     SuccessComponent,
     CancelComponent,
     CheckoutComponent,
+    ProfiloUtenteComponent,
     
   ],
   imports: [
